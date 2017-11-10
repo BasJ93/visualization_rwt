@@ -233,7 +233,7 @@ function init() {
                 var fk_link_name;
 
                 if (end_effector_link[current_group] == null) {
-                    fk_link_name = "Flange";
+                    fk_link_name = "tool0";
                 }
                 else {
                     fk_link_name = end_effector_link[current_group];
@@ -305,7 +305,7 @@ function init() {
                 var fk_link_name;
 
                 if (end_effector_link[current_group] == null) {
-                    fk_link_name = "Flange";
+                    fk_link_name = "tool0";
                 }
                 else {
                     fk_link_name = end_effector_link[current_group];
@@ -672,7 +672,7 @@ function createSliderView() {
                 }
             }
         }
-        $.getScript("js/jquery-mobile/jquery.mobile-1.3.2.min.js");
+        $.getScript("rwt_moveit/js/jquery-mobile/jquery.mobile-1.3.2.min.js");
         var msg = new ROSLIB.Message({
             data: current_group
         });
