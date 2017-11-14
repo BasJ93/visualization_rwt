@@ -38,27 +38,32 @@ def set_param(name, value):
 #        rospy.set_param('/end_effector_link/' + group_name, link_name)
 
 def set_param():
-    group_name_description = get_param('robot_description_semantic')
+    semantic_description = get_param('robot_description_semantic')
     description = get_param('robot_description')
-    joints_description = xml.dom.minidom.parseString(description).getElementsByTagName('joint')
-    effector_description = xml.dom.minidom.parseString(description).getElementsByTagName('end_effector')
-    group_description = xml.dom.minidom.parseString(group_name_description).getElementsByTagName('group')
-    
-    name = ""
+    effector_description = xml.dom.minidom.parseString(semantic_description).getElementsByTagName('end_effector')
+    group_description = xml.dom.minidom.parseString(semantic_description).getElementsByTagName('group')
     
     for group_name in group_description:
       name = group_name.getAttribute('name')
-    
-    links = []
-    for joint_name in joints_description:
-      if(joint_name.getAttribute('type') != "fixed"):
-        links.append(joint_name.getAttribute('name'))
-    rospy.set_param('~' + name, links)
+      links = []
+      for child in group_name.childNodes:
+        if child.nodeName != "chain":
+          for child in group_name.childNodes:
+            if child.nodeType is child.TEXT_NODE:
+                continue
+            links.append(child.getAttribute('name'))
+        else:
+          joints_description = xml.dom.minidom.parseString(description).getElementsByTagName('joint')
+          for joint_name in joints_description:
+            if(joint_name.getAttribute('type') != "fixed"):
+              links.append(joint_name.getAttribute('name'))
+      rospy.set_param('~' + name, links)
     for effector_name in effector_description:
         if effector_name.nodeType is effector_name.TEXT_NODE:
             continue
         link_name = effector_name.getAttribute('parent_link')
         group_name = effector_name.getAttribute('parent_group')
+        #print link_name
         rospy.set_param('/end_effector_link/' + group_name, link_name)
 
 if __name__ == '__main__':
