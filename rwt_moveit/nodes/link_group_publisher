@@ -57,6 +57,11 @@ def set_param():
           for joint_name in joints_description:
             if(joint_name.getAttribute('type') != "fixed"):
               links.append(joint_name.getAttribute('name'))
+            else:
+              pass
+      del links[0]
+      del links[-1]
+          
       rospy.set_param('~' + name, links)
     for effector_name in effector_description:
         if effector_name.nodeType is effector_name.TEXT_NODE:
